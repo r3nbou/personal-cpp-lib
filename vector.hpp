@@ -4,11 +4,14 @@
 #include "math.hpp"
 #include "algorithm.hpp"
 #include <stdexcept>
+#include <utility>
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
 // Vector class implemented on C-style arrays with growth based on powers of 2
+// Strange code explanations:
+// t_vectorSize & (-t_vectorSize) ---- checks if the vector size is already a power of 2
 
 typedef unsigned int sizeT;
 
@@ -35,7 +38,7 @@ public:
 		_baseArray = new T[_currentMaxSize];
 		
 		auto it = values.begin();
-		for (sizeT i = 0;i < values.size();++i) {
+		for (sizeT i = 0; i < values.size(); i++) {
 			_baseArray[i] = *it++;
 		}
 	}
@@ -174,4 +177,4 @@ public:
 	}
 };
 
-#endif
+#endif // VECTOR_HPP
