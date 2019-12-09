@@ -1,30 +1,32 @@
-#ifndef Vector_hpp
-#define Vector_hpp
+// Artem Mikheev 2019
+// MIT License
 
-#include "custom_types.h"
-#include "maths.h"
-#include "algorithms.h"
+#include "math.hpp"
+#include "algorithm.hpp"
 #include <stdexcept>
 
-using Maths::roundToNextPowerOfTwo;
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
-//vector class implemented on C-style arrays
+// Vector class implemented on C-style arrays with growth based on powers of 2
+
+typedef unsigned int sizeT;
 
 template<typename T>
-class vector {
-	static sizeT _defaultStartSize;
+class Vector {
+	const sizeT _defaultStartSize = 32;
 	T * _baseArray = nullptr;
 	sizeT _currentSize = 0;
 	sizeT _currentMaxSize = 0;
 public:
-	vector()
+	Vector()
 	:  _currentSize(0),
 	  _currentMaxSize(_defaultStartSize)
 	{
 		_baseArray = new T[_currentMaxSize];
 	}
 
-	vector(std::initializer_list<T> values)
+	Vector(std::initializer_list<T> values)
 		: _currentSize(values.size())
 	{
 		_currentMaxSize = (_currentSize & (-_currentSize)) == _currentSize
@@ -38,34 +40,34 @@ public:
 		}
 	}
 
-	template <sizeT n> vector(const T (&arr)[n])
+	template <sizeT n> Vector(const T (&arr)[n])
 	{
 		_currentSize = n;
-		_currentMaxSize = (n & (-n)) == n ? n : roundToNextPowerOfTwo(n);
+		_currentMaxSize = (n & (-n)) == n ? n : Math::roundToNextPowerOfTwo(n);
 		_baseArray = new T[_currentMaxSize];
 		copy(arr, _baseArray, n);
 	}
 
-	vector(sizeT t_vectorSize)
+	Vector(sizeT t_vectorSize)
 	: _currentSize(t_vectorSize)
 	{
 		_currentMaxSize = ((t_vectorSize & (-t_vectorSize)) == t_vectorSize
 							? t_vectorSize
-							: roundToNextPowerOfTwo(t_vectorSize)),
+							: Math::roundToNextPowerOfTwo(t_vectorSize)),
 		_baseArray = new T[_currentMaxSize];
 	}
 
-	vector(sizeT t_vectorSize, T t_default)
+	Vector(sizeT t_vectorSize, T t_default)
 	: _currentSize(t_vectorSize)
 	{
 		_currentMaxSize = ((t_vectorSize & (-t_vectorSize)) == t_vectorSize
 							? t_vectorSize
-							: roundToNextPowerOfTwo(t_vectorSize)),
+							: Math::roundToNextPowerOfTwo(t_vectorSize)),
 		_baseArray = new T[_currentMaxSize];
         fill(_baseArray, _currentMaxSize, t_default);
 	}
 
-	~vector()
+	~Vector()
 	{
 		if (_baseArray != nullptr) {
 			_currentSize = 0;
@@ -74,7 +76,7 @@ public:
 		}
 	}
 
-	vector(const vector & other)
+	Vector(const Vector & other)
 	: _currentSize(other._currentSize)
 	, _currentMaxSize(other._currentMaxSize)
 	{
@@ -84,7 +86,7 @@ public:
 		copy(other._baseArray, _baseArray, _currentSize);
 	}
 
-	vector& operator=(const vector & other)
+	Vector& operator=(const Vector & other)
 	{
 		_currentMaxSize = other._currentMaxSize;
 		_currentSize = other._currentSize;
@@ -107,22 +109,22 @@ public:
 		return _baseArray[index];
 	}
 
-	vector operator+(const vector & other)
+	Vector operator+(const Vector & other)
 	{
-		vector result(_currentSize+other._currentSize);
+		Vector result(_currentSize+other._currentSize);
 		copy(_baseArray, result._baseArray, _currentSize);
 		copy(other._baseArray, result._baseArray+_currentSize, other._currentSize);
 		return result;
 	}
 
-	vector& operator+=(const vector &other)
+	Vector& operator+=(const Vector &other)
 	{
-		vector result = *this+other;
+		Vector result = *this+other;
 		*this = result;
 		return *this;
 	}
 
-	bool operator==(const vector &other)
+	bool operator==(const Vector &other)
 	{
 		if (_currentSize != other._currentSize) return false;
 		for (sizeT i = 0; i < _currentSize; i++)
@@ -137,7 +139,7 @@ public:
 
 	void resize(sizeT t_n)
 	{
-		vector result(t_n);
+		Vector result(t_n);
 		if (t_n < _currentSize)
 			copy(_baseArray, result._baseArray, t_n);
 		else
@@ -158,7 +160,7 @@ public:
 	void push(T t_value)
 	{
 		if (_currentMaxSize == 0)
-			vector();
+			Vector();
 		if (_currentSize == _currentMaxSize)
 			resize(_currentMaxSize*2);
 		_baseArray[_currentSize++] = t_value;
@@ -172,8 +174,4 @@ public:
 	}
 };
 
-template<typename T>
-sizeT vector<T>::_defaultStartSize = 32U;
-
 #endif
-
