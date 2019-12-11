@@ -48,7 +48,7 @@ public:
 		_currentSize = n;
 		_currentMaxSize = (n & (-n)) == n ? n : Math::roundToNextPowerOfTwo(n);
 		_baseArray = new T[_currentMaxSize];
-		copy(arr, _baseArray, n);
+		Algorithm::copy(arr, _baseArray, n);
 	}
 
 	Vector(sizeT t_vectorSize)
@@ -67,7 +67,7 @@ public:
 							? t_vectorSize
 							: Math::roundToNextPowerOfTwo(t_vectorSize)),
 		_baseArray = new T[_currentMaxSize];
-        fill(_baseArray, _currentMaxSize, t_default);
+        Algorithm::fill(_baseArray, _currentMaxSize, t_default);
 	}
 
 	~Vector()
@@ -86,7 +86,7 @@ public:
 		if (_baseArray != nullptr)
 			delete [] _baseArray;
 		_baseArray = new T[_currentMaxSize];
-		copy(other._baseArray, _baseArray, _currentSize);
+		Algorithm::copy(other._baseArray, _baseArray, _currentSize);
 	}
 
 	Vector& operator=(const Vector & other)
@@ -96,7 +96,7 @@ public:
 		if (_baseArray != nullptr)
 			delete [] _baseArray;
 		_baseArray = new T[_currentMaxSize];
-		copy(other._baseArray, _baseArray, _currentSize);
+		Algorithm::copy(other._baseArray, _baseArray, _currentSize);
 		return *this;
 	}
 
@@ -115,8 +115,8 @@ public:
 	Vector operator+(const Vector & other)
 	{
 		Vector result(_currentSize+other._currentSize);
-		copy(_baseArray, result._baseArray, _currentSize);
-		copy(other._baseArray, result._baseArray+_currentSize, other._currentSize);
+		Algorithm::copy(_baseArray, result._baseArray, _currentSize);
+		Algorithm::copy(other._baseArray, result._baseArray+_currentSize, other._currentSize);
 		return result;
 	}
 
@@ -144,9 +144,9 @@ public:
 	{
 		Vector result(t_n);
 		if (t_n < _currentSize)
-			copy(_baseArray, result._baseArray, t_n);
+			Algorithm::copy(_baseArray, result._baseArray, t_n);
 		else
-			copy(_baseArray, result._baseArray, _currentSize);
+			Algorithm::copy(_baseArray, result._baseArray, _currentSize);
 		result._currentSize = t_n;
 		*this = result;
 	}

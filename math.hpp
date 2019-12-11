@@ -96,7 +96,7 @@ namespace Math {
 			int gcdToDiv = gcd(powerToRaise, rootToTake);
 			return nthRoot(realBinPow(t_base, powerToRaise/gcdToDiv), rootToTake/gcdToDiv);
 		}
-		if (abs(t_power-floor(t_power) > eps))
+		if (abs(t_power-floor(t_power)) > eps)
 			return realBinPow(t_base, floor(t_power))*realBinPow(t_base, t_power-floor(t_power));
 		if (t_base < 0 && abs(fmod(t_power, 2.0)-1.0) < eps)
 			return -realBinPow(-t_base, t_power);

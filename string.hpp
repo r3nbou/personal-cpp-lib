@@ -88,22 +88,13 @@ public:
 	: _charData(t_n) {}
 
 	String(sizeT t_n, char32_t t_default)
-	: _charData(t_n+1, t_default)
-	{
-		_charData[t_n] = U'\0';
-	}
+	: _charData(t_n, t_default) {}
 
 	String(sizeT t_n, char16_t t_default)
-			: _charData(t_n+1, static_cast<char32_t>(t_default))
-	{
-		_charData[t_n] = U'\0';
-	}
+			: _charData(t_n, static_cast<char32_t>(t_default)) {}
 
 	String(sizeT t_n, char t_default)
-			: _charData(t_n-1, static_cast<char32_t>(t_default))
-	{
-		_charData[t_n] = U'\0';
-	}
+			: _charData(t_n, static_cast<char32_t>(t_default)) {}
 
 	// Wrapper functions for converting std strings to this string class
 	String(std::string t_stdString)
