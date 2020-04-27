@@ -19,8 +19,8 @@ protected:
 	struct node {
 		T1 *key;
 		T2 *elem;
-		unsigned long long priority;
-		unsigned int size;
+		uint64_t priority;
+		uint32_t size;
 		node *left, *right;
 
 		node()
@@ -266,7 +266,7 @@ protected:
 
 	struct node {
 		T *key;
-		unsigned long long priority;
+		uint64_t priority;
 		node *left, *right;
 		unsigned int size;
 

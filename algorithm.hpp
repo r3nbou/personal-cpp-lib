@@ -4,10 +4,30 @@
 #ifndef ALGORITHM_HPP
 #define ALGORITHM_HPP
 
+#include "vartypes.hpp"
+
 namespace Algorithm {
-	typedef unsigned int sizeT;
 
 	/* Various memory functions for working with memory  */
+
+	template<typename T>
+	void swap(T &t_first, T &t_second) {
+		T tmp = t_first;
+		t_first = t_second;
+		t_second = tmp;
+	}
+
+	template<typename T>
+	void copy(T t_first, T t_second, sizeT t_n) {
+		for (sizeT i = 0; i < t_n; i++)
+			t_second[i] = t_first[i];
+	}
+
+	template<typename T>
+	void copy(T &t_first, sizeT firstLoc, T &t_second, sizeT secLoc, sizeT t_n) {
+		for (sizeT i = 0; i < t_n; i++)
+			t_second[secLoc + i] = t_first[firstLoc + i];
+	}
 
 	template<typename T>
 	void copy(const T *t_firstIt, T *t_secondIt, sizeT t_n) {
@@ -35,6 +55,22 @@ namespace Algorithm {
 			*t_startIt = t_value;
 			t_startIt++;
 		}
+	}
+
+	template<typename T>
+	void reverse(T *t_firstIt, T *t_secondIt) {
+		while (t_firstIt != t_secondIt) {
+			Algorithm::swap(*t_firstIt, *t_secondIt);
+			t_firstIt++, t_secondIt++;
+		}
+
+	}
+
+	template<typename T>
+	void reverse(T &t_first, sizeT t_n) {
+		int32_t end = t_n / 2;
+		for (sizeT i = 0; i < end; i++)
+			Algorithm::swap(t_first[i], t_first[t_n - 1 - i]);
 	}
 
 	template<typename T1, typename T2>

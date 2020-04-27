@@ -3,6 +3,7 @@
 
 #include "math.hpp"
 #include "algorithm.hpp"
+#include "vartypes.hpp"
 #include <stdexcept>
 #include <utility>
 
@@ -13,28 +14,21 @@
 // Strange code explanations:
 // t_vectorSize & (-t_vectorSize) ---- checks if the vector size is already a power of 2
 
-typedef unsigned int sizeT;
-
 template<typename T>
 class Vector {
-	const sizeT _defaultStartSize = 32;
+	static const sizeT _defaultStartSize = 32;
 	T * _baseArray = nullptr;
 	sizeT _currentSize = 0;
 	sizeT _currentMaxSize = 0;
 public:
-	Vector()
-	:  _currentSize(0),
-	  _currentMaxSize(_defaultStartSize)
-	{
-		_baseArray = new T[_currentMaxSize];
-	}
+	const sizeT *size = &_currentSize;
 
 	Vector(std::initializer_list<T> values)
 		: _currentSize(values.size())
 	{
 		_currentMaxSize = (_currentSize & (-_currentSize)) == _currentSize
 							? _currentSize
-							: roundToNextPowerOfTwo(_currentSize);
+							: Math::roundToNextPowerOfTwo(_currentSize);
 		_baseArray = new T[_currentMaxSize];
 		
 		auto it = values.begin();
@@ -51,21 +45,12 @@ public:
 		Algorithm::copy(arr, _baseArray, n);
 	}
 
-	Vector(sizeT t_vectorSize)
+	Vector(sizeT t_vectorSize = 0, T t_default = {})
 	: _currentSize(t_vectorSize)
 	{
-		_currentMaxSize = ((t_vectorSize & (-t_vectorSize)) == t_vectorSize
+		_currentMaxSize = Algorithm::max((t_vectorSize & (-t_vectorSize)) == t_vectorSize
 							? t_vectorSize
-							: Math::roundToNextPowerOfTwo(t_vectorSize)),
-		_baseArray = new T[_currentMaxSize];
-	}
-
-	Vector(sizeT t_vectorSize, T t_default)
-	: _currentSize(t_vectorSize)
-	{
-		_currentMaxSize = ((t_vectorSize & (-t_vectorSize)) == t_vectorSize
-							? t_vectorSize
-							: Math::roundToNextPowerOfTwo(t_vectorSize)),
+							: Math::roundToNextPowerOfTwo(t_vectorSize), _defaultStartSize),
 		_baseArray = new T[_currentMaxSize];
         Algorithm::fill(_baseArray, _currentMaxSize, t_default);
 	}
@@ -112,6 +97,11 @@ public:
 		return _baseArray[index];
 	}
 
+	T back() const
+	{
+		return _baseArray[_currentSize - 1];
+	}
+
 	Vector operator+(const Vector & other)
 	{
 		Vector result(_currentSize+other._currentSize);
@@ -122,8 +112,10 @@ public:
 
 	Vector& operator+=(const Vector &other)
 	{
-		Vector result = *this+other;
-		*this = result;
+		int oldSize = _currentSize;
+		resize(_currentSize + other._currentSize);
+		for (int i = oldSize; i < _currentSize; i++)
+			_baseArray[i] = other._baseArray[i];
 		return *this;
 	}
 
@@ -135,20 +127,17 @@ public:
 		return true;
 	}
 
-	sizeT size() const
+	void resize(sizeT t_n, T t_default = {})
 	{
-		return _currentSize;
-	}
-
-	void resize(sizeT t_n)
-	{
-		Vector result(t_n);
-		if (t_n < _currentSize)
-			Algorithm::copy(_baseArray, result._baseArray, t_n);
-		else
-			Algorithm::copy(_baseArray, result._baseArray, _currentSize);
-		result._currentSize = t_n;
-		*this = result;
+		if (t_n > _currentMaxSize) {
+			T *tmpArray = new T[t_n];
+			Algorithm::copy(_baseArray, tmpArray, _currentSize);
+			Algorithm::fill(tmpArray + _currentSize, tmpArray + t_n, t_default);
+			_currentSize = t_n;
+			_baseArray = tmpArray;
+		} else {
+			_currentSize = t_n;
+		}
 	}
 
 	void clear()
