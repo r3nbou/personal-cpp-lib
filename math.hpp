@@ -1,5 +1,5 @@
 // Artem Mikheev 2019
-// MIT License
+// GNU GPLv3 License
 
 #include <stdexcept>
 #include <cmath>

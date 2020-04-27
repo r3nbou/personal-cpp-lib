@@ -1,5 +1,5 @@
 // Artem Mikheev 2019
-// MIT License
+// GNU GPLv3 License
 
 #ifndef AVL_TREE_HPP
 #define AVL_TREE_HPP

@@ -1,5 +1,5 @@
 // Artem Mikheev 2019
-// MIT License
+// GNU GPLv3 License
 
 #ifndef RANDOM_HPP
 #define RANDOM_HPP

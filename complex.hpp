@@ -1,5 +1,5 @@
 // Artem Mikheev 2019
-// MIT License
+// GNU GPLv3 License
 
 #ifndef COMPLEX_HPP
 #define COMPLEX_HPP

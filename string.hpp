@@ -1,5 +1,5 @@
 // Artem Mikheev 2019
-// MIT License
+// GNU GPLv3 License
 
 #include "vector.hpp"
 #include "vartypes.hpp"

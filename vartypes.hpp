@@ -1,5 +1,5 @@
 // Artem Mikheev 2020
-// MIT License
+// GNU GPLv3 License
 
 #ifndef VARTYPES_HPP
 #define VARTYPES_HPP
